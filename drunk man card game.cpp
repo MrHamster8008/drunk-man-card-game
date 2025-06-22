@@ -1,4 +1,4 @@
-﻿#include <iostream>
+#include <iostream>
 #include <ctime>
 #include <fstream>
 #include <string>
@@ -219,7 +219,7 @@ int main()
     string StartingDeck1, StartingDeck2, CardsAvailable = "0123456789";
     FQueue FirstPlayer, SecondPlayer;
     int Choice, Turn = 0, FirstPlayerCard, SecondPlayerCard;
-    bool bFirstDeckIsEmpty = false, bSecondDeckIsEmpty = false;
+    bool bFirstDeckIsEmpty = false, bSecondDeckIsEmpty = false, bContinueGame = true;
 
     Choice = CorrectlyEnterChoice(1);
     switch (Choice)
@@ -227,57 +227,63 @@ int main()
     case 1: StartingDeck1 = RandomDeck(CardsAvailable); break;
     case 2: StartingDeck1 = YourDeck(CardsAvailable); break;
     case 3: StartingDeck1 = DeckFromFile(CardsAvailable); break;
-    default: break;
+    default: bContinueGame = false; break;
     }
 
-    Choice = CorrectlyEnterChoice(2);
-    switch (Choice)
-    {
-    case 1: StartingDeck2 = RandomDeck(CardsAvailable); break;
-    case 2: StartingDeck2 = YourDeck(CardsAvailable); break;
-    case 3: StartingDeck2 = DeckFromFile(CardsAvailable); break;
-    default: break;
-    }
-
-    for (int i = 0; i < 5; i++)
-    {
-        FirstPlayer.Add(int(StartingDeck1[i]) - '0');
-        SecondPlayer.Add(int(StartingDeck2[i]) - '0');
-    }
-
-    while (!bFirstDeckIsEmpty && !bSecondDeckIsEmpty && Turn < 1000000)
-    {
-        Turn++;
-        FirstPlayerCard = FirstPlayer.Front();
-        SecondPlayerCard = SecondPlayer.Front();
-        FirstPlayer.Remove();
-        SecondPlayer.Remove();
-
-        if (FirstPlayerCard > SecondPlayerCard || (FirstPlayerCard == 0 && SecondPlayerCard == 9))
+    if (bContinueGame) {
+        Choice = CorrectlyEnterChoice(2);
+        switch (Choice)
         {
-            FirstPlayer.Add(FirstPlayerCard);
-            FirstPlayer.Add(SecondPlayerCard);
-        }
-        else if (FirstPlayerCard < SecondPlayerCard || (FirstPlayerCard == 9 && SecondPlayerCard == 0))
-        {
-            SecondPlayer.Add(FirstPlayerCard);
-            SecondPlayer.Add(SecondPlayerCard);
+        case 1: StartingDeck2 = RandomDeck(CardsAvailable); break;
+        case 2: StartingDeck2 = YourDeck(CardsAvailable); break;
+        case 3: StartingDeck2 = DeckFromFile(CardsAvailable); break;
+        default: bContinueGame = false; break;
         }
 
-        bFirstDeckIsEmpty = FirstPlayer.IsEmpty();
-        bSecondDeckIsEmpty = SecondPlayer.IsEmpty();
-    }
+        if (bContinueGame) {
+            for (int i = 0; i < 5; i++)
+            {
+                FirstPlayer.Add(int(StartingDeck1[i]) - '0');
+                SecondPlayer.Add(int(StartingDeck2[i]) - '0');
+            }
 
-    if (bFirstDeckIsEmpty)
-    {
-        cout << "first" << endl << "Потребовалось ходов: " << Turn;
-    }
-    else if (bSecondDeckIsEmpty)
-    {
-        cout << "second" << endl << "Потребовалось ходов: " << Turn;
-    }
-    else
-    {
-        cout << "botva";
-    }
+            while (!bFirstDeckIsEmpty && !bSecondDeckIsEmpty && Turn < 1000000)
+            {
+                Turn++;
+                FirstPlayerCard = FirstPlayer.Front();
+                SecondPlayerCard = SecondPlayer.Front();
+                FirstPlayer.Remove();
+                SecondPlayer.Remove();
+
+                if (FirstPlayerCard > SecondPlayerCard || (FirstPlayerCard == 0 && SecondPlayerCard == 9))
+                {
+                    FirstPlayer.Add(FirstPlayerCard);
+                    FirstPlayer.Add(SecondPlayerCard);
+                }
+                else if (FirstPlayerCard < SecondPlayerCard || (FirstPlayerCard == 9 && SecondPlayerCard == 0))
+                {
+                    SecondPlayer.Add(FirstPlayerCard);
+                    SecondPlayer.Add(SecondPlayerCard);
+                }
+
+                bFirstDeckIsEmpty = FirstPlayer.IsEmpty();
+                bSecondDeckIsEmpty = SecondPlayer.IsEmpty();
+            }
+
+            if (bFirstDeckIsEmpty)
+            {
+                cout << "first" << endl << "Потребовалось ходов: " << Turn;
+            }
+            else if (bSecondDeckIsEmpty)
+            {
+                cout << "second" << endl << "Потребовалось ходов: " << Turn;
+            }
+            else
+            {
+                cout << "botva";
+            }
+        }
+        }
+        
+    
 }
