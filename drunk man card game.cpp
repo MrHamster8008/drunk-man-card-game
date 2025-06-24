@@ -270,11 +270,11 @@ int main()
                 bSecondDeckIsEmpty = SecondPlayer.IsEmpty();
             }
 
-            if (bFirstDeckIsEmpty)
+            if (!bFirstDeckIsEmpty)
             {
                 cout << "first" << endl << "Потребовалось ходов: " << Turn;
             }
-            else if (bSecondDeckIsEmpty)
+            else if (!bSecondDeckIsEmpty)
             {
                 cout << "second" << endl << "Потребовалось ходов: " << Turn;
             }
